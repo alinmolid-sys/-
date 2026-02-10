@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد | پنل مدیریت</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="admin-style.css">
+    <style>
+        .admin-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+        
+        /* سایدبار ادمین */
+        .admin-sidebar {
+            background: linear-gradient(180deg, var(--dark) 0%, #1a252f 100%);
+            color: white;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .admin-logo {
+            padding: 30px 20px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            text-align: center;
+        }
+        
+        .admin-logo h2 {
+            font-size: 20px;
+            color: var(--gold);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .admin-logo p {
+            font-size: 12px;
+            color: var(--silver);
+            opacity: 0.8;
+        }
+        
+        .admin-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            color: var(--silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+            font-size: 15px;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--gold-light);
+            border-right-color: var(--gold);
+        }
+        
+        .menu-item.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border-right-color: var(--gold);
+        }
+        
+        .menu-item i {
+            font-size: 18px;
+            width: 24px;
+        }
+        
+        .menu-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 15px 25px;
+        }
+        
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            color: #e74c3c;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+            font-size: 15px;
+            margin-top: auto;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(231, 76, 60, 0.1);
+            border-right-color: #e74c3c;
+        }
+        
+        /* محتوای اصلی */
+        .admin-content {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--silver-light);
+        }
+        
+        .admin-header h1 {
+            color: var(--dark);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--gold);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .user-details h4 {
+            color: var(--dark);
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .user-details p {
+            color: var(--silver-dark);
+            font-size: 12px;
+        }
+        
+        /* کارت‌های آمار */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        .stat-card:nth-child(1) .stat-icon { background: rgba(52, 152, 219, 0.1); color: #3498db; }
+        .stat-card:nth-child(2) .stat-icon { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+        .stat-card:nth-child(3) .stat-icon { background: rgba(155, 89, 182, 0.1); color: #9b59b6; }
+        .stat-card:nth-child(4) .stat-icon { background: rgba(241, 196, 15, 0.1); color: #f1c40f; }
+        
+        .stat-trend {
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .trend-up { background: rgba(46, 204, 113, 0.1); color: #27ae60; }
+        .trend-down { background: rgba(231, 76, 60, 0.1); color: #c0392b; }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 10px 0 5px;
+        }
+        
+        .stat-label {
+            color: var(--silver-dark);
+            font-size: 14px;
+        }
+        
+        /* جدول سفارش‌ها */
+        .recent-orders {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-header h2 {
+            color: var(--dark);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .view-all {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .orders-table th {
+            text-align: right;
+            padding: 15px;
+            background: var(--silver-light);
+            color: var(--dark);
+            font-weight: 600;
+            border-bottom: 2px solid var(--silver);
+            font-size: 14px;
+        }
+        
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--silver-light);
+            font-size: 14px;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-new { background: rgba(52, 152, 219, 0.1); color: #2980b9; }
+        .status-processing { background: rgba(241, 196, 15, 0.1); color: #f39c12; }
+        .status-completed { background: rgba(46, 204, 113, 0.1); color: #27ae60; }
+        .status-cancelled { background: rgba(231, 76, 60, 0.1); color: #c0392b; }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn { background: rgba(52, 152, 219, 0.1); color: #3498db; }
+        .view-btn:hover { background: #3498db; color: white; }
+        
+        .edit-btn { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+        .edit-btn:hover { background: #2ecc71; color: white; }
+        
+        /* فعالیت‌های اخیر */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gold-light);
+            color: var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .activity-content h4 {
+            color: var(--dark);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .activity-content p {
+            color: var(--silver-dark);
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        .activity-time {
+            color: var(--silver);
+            font-size: 12px;
+        }
+        
+        /* رسپانسیو */
+        @media (max-width: 1024px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-sidebar {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: var(--dark);
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- سایدبار -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2><i class="bi bi-gear"></i> پنل مدیریت</h2>
+                <p>کارگاه صنعتی</p>
+            </div>
+            
+            <nav class="admin-menu">
+                <a href="dashboard.html" class="menu-item active">
+                    <i class="bi bi-speedometer2"></i>
+                    داشبورد
+                </a>
+                <a href="orders.html" class="menu-item">
+                    <i class="bi bi-cart-check"></i>
+                    سفارش‌ها
+                    <span class="badge">۱۲</span>
+                </a>
+                <a href="services.html" class="menu-item">
+                    <i class="bi bi-tools"></i>
+                    خدمات
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-people"></i>
+                    مشتریان
+                </a>
+                
+                <div class="menu-divider"></div>
+                
+                <a href="#" class="menu-item">
+                    <i class="bi bi-bar-chart"></i>
+                    گزارش‌ها
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-gear"></i>
+                    تنظیمات
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="bi bi-person-circle"></i>
+                    پروفایل
+                </a>
+            </nav>
+            
+            <a href="index.html" class="logout-btn">
+                <i class="bi bi-box-arrow-left"></i>
+                خروج از سیستم
+            </a>
+        </aside>
+        
+        <!-- محتوای اصلی -->
+        <main class="admin-content">
+            <header class="admin-header">
+                <div>
+                    <h1><i class="bi bi-speedometer2"></i> داشبورد مدیریت</h1>
+                    <p>خلاصه‌ای از فعالیت‌های کارگاه</p>
+                </div>
+                
+                <div class="user-info">
+                    <div class="user-avatar">ا</div>
+                    <div class="user-details">
+                        <h4>مدیر سیستم</h4>
+                        <p>admin@workshop.com</p>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- کارت‌های آمار -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="bi bi-cart-check"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+۱۲٪</span>
+                    </div>
+                    <h3 class="stat-number">۴۸</h3>
+                    <p class="stat-label">سفارش جدید این ماه</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="bi bi-currency-exchange"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+۲۳٪</span>
+                    </div>
+                    <h3 class="stat-number">۱۲۵,۴۰۰</h3>
+                    <p class="stat-label">درآمد این ماه (هزارتومان)</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+۸٪</span>
+                    </div>
+                    <h3 class="stat-number">۱۵۶</h3>
+                    <p class="stat-label">مشتری فعال</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <span class="stat-trend trend-down">-۵٪</span>
+                    </div>
+                    <h3 class="stat-number">۷</h3>
+                    <p class="stat-label">سفارش در انتظار</p>
+                </div>
+            </div>
+            
+            <!-- سفارش‌های اخیر -->
+            <section class="recent-orders">
+                <div class="section-header">
+                    <h2><i class="bi bi-cart-check"></i> سفارش‌های اخیر</h2>
+                    <a href="orders.html" class="view-all">
+                        مشاهده همه
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>شماره سفارش</th>
+                                <th>مشتری</th>
+                                <th>تاریخ</th>
+                                <th>مبلغ</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>WS-2024-045</td>
+                                <td>شرکت صنعت گستر</td>
+                                <td>۱۴۰۳/۰۲/۱۵</td>
+                                <td>۲,۵۰۰,۰۰۰ تومان</td>
+                                <td><span class="status-badge status-completed">تکمیل شده</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">مشاهده</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>WS-2024-044</td>
+                                <td>کارگاه دقیق ساز</td>
+                                <td>۱۴۰۳/۰۲/۱۴</td>
+                                <td>۱,۸۰۰,۰۰۰ تومان</td>
+                                <td><span class="status-badge status-processing">در حال انجام</span></td>
+                                <td>
+                                    <button class="action-btn edit-btn">ویرایش</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>WS-2024-043</td>
+                                <td>آقای محمدی</td>
+                                <td>۱۴۰۳/۰۲/۱۳</td>
+                                <td>۹۵۰,۰۰۰ تومان</td>
+                                <td><span class="status-badge status-new">جدید</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">مشاهده</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>WS-2024-042</td>
+                                <td>شرکت خودروسازی</td>
+                                <td>۱۴۰۳/۰۲/۱۲</td>
+                                <td>۴,۲۰۰,۰۰۰ تومان</td>
+                                <td><span class="status-badge status-processing">در حال انجام</span></td>
+                                <td>
+                                    <button class="action-btn edit-btn">ویرایش</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>WS-2024-041</td>
+                                <td>آقای احمدی</td>
+                                <td>۱۴۰۳/۰۲/۱۱</td>
+                                <td>۶۵۰,۰۰۰ تومان</td>
+                                <td><span class="status-badge status-completed">تکمیل شده</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">مشاهده</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- فعالیت‌های اخیر -->
+            <section class="recent-orders">
+                <div class="section-header">
+                    <h2><i class="bi bi-clock-history"></i> فعالیت‌های اخیر</h2>
+                </div>
+                
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-cart-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>سفارش جدید ثبت شد</h4>
+                            <p>سفارش WS-2024-045 توسط شرکت صنعت گستر</p>
+                            <span class="activity-time">۲ ساعت پیش</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>سفارش تکمیل شد</h4>
+                            <p>سفارش WS-2024-041 با موفقیت تحویل داده شد</p>
+                            <span class="activity-time">۵ ساعت پیش</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>مشتری جدید</h4>
+                            <p>کارگاه دقیق ساز در سیستم ثبت نام کرد</p>
+                            <span class="activity-time">دیروز</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="bi bi-tools"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>خدمت جدید اضافه شد</h4>
+                            <p>خدمت "سنگ‌زنی دقیق" به لیست خدمات اضافه شد</p>
+                            <span class="activity-time">۲ روز پیش</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // مدیریت وضعیت سفارش‌ها
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.closest('tr').querySelector('td:first-child').textContent;
+                alert(`مشاهده سفارش ${orderId}\n\nدر نسخه کامل به صفحه جزئیات منتقل می‌شود.`);
+            });
+        });
+        
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.closest('tr').querySelector('td:first-child').textContent;
+                alert(`ویرایش سفارش ${orderId}\n\nدر نسخه کامل به صفحه ویرایش منتقل می‌شود.`);
+            });
+        });
+        
+        // پیام خوش آمدگویی
+        console.log('داشبورد مدیریت بارگذاری شد');
+        
+        // شبیه‌سازی اعلان‌ها
+        setTimeout(() => {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: var(--gold);
+                color: var(--dark);
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.5s ease-out;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(-100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="bi bi-bell"></i>
+                    <div>
+                        <strong>خوش آمدید!</strong>
+                        <p style="margin: 5px 0 0; font-size: 12px;">شما با موفقیت وارد پنل شدید.</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: var(--dark); font-size: 20px; cursor: pointer; margin-right: auto;">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // حذف خودکار پس از 5 ثانیه
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOut 0.5s ease-out';
+                    setTimeout(() => notification.remove(), 500);
+                }
+            }, 5000);
+        }, 1000);
+    </script>
+</body>
+</html>

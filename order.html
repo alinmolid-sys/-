@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت سفارش | کارگاه صنعتی</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* استایل‌های اضافی برای صفحه سفارش */
+        .order-page .sidebar {
+            display: none;
+        }
+        
+        .order-page .container {
+            grid-template-areas:
+                "header header"
+                "main main"
+                "footer footer";
+            grid-template-columns: 1fr;
+        }
+        
+        .order-header {
+            background: linear-gradient(135deg, var(--dark) 0%, #2c3e50 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .order-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .order-header p {
+            color: var(--silver);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold);
+            text-decoration: none;
+            padding: 12px 25px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-home:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* استایل‌های مخصوص فوتر صفحه سفارش */
+        .order-page .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body class="order-page">
+    <div class="container">
+        <!-- هدر -->
+        <header class="header" id="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="bi bi-gear-fill"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>کارگاه صنعتی</h1>
+                    <p class="logo-sub">ثبت سفارش آنلاین</p>
+                </div>
+            </div>
+
+            <nav class="main-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link"><i class="bi bi-house-door"></i> صفحه اصلی</a></li>
+                    <li><a href="order.html" class="nav-link active"><i class="bi bi-cart-check"></i> ثبت سفارش</a></li>
+                    <li><a href="contact.html" class="nav-link"><i class="bi bi-telephone"></i> تماس با ما</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-contact">
+                <div class="contact-item">
+                    <i class="bi bi-headset"></i>
+                    <div>
+                        <span class="contact-label">پشتیبانی سفارش</span>
+                        <span class="contact-value">۰۲۱-۱۲۳۴۵۶۷۸</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- محتوای اصلی -->
+        <main class="main-content" id="mainContent">
+            <!-- هدر صفحه سفارش -->
+            <div class="order-header">
+                <h1><i class="bi bi-clipboard-check"></i> ثبت سفارش جدید</h1>
+                <p>فرم زیر را مرحله به مرحله تکمیل کنید. پس از ثبت، همکاران ما در اسرع وقت با شما تماس خواهند گرفت.</p>
+                <a href="index.html" class="back-to-home">
+                    <i class="bi bi-arrow-right"></i>
+                    بازگشت به صفحه اصلی
+                </a>
+            </div>
+
+            <!-- ========== بخش ثبت سفارش ========== -->
+            <section class="order-section" id="orderSection">
+                <!-- مراحل سفارش -->
+                <div class="order-steps">
+                    <div class="step active">
+                        <div class="step-number">۱</div>
+                        <div class="step-info">
+                            <h4>اطلاعات مشتری</h4>
+                            <p>مشخصات خود را وارد کنید</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">۲</div>
+                        <div class="step-info">
+                            <h4>جزئیات سفارش</h4>
+                            <p>خدمات مورد نیاز</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">۳</div>
+                        <div class="step-info">
+                            <h4>بارگذاری فایل</h4>
+                            <p>آپلود نقشه و مدارک</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">۴</div>
+                        <div class="step-info">
+                            <h4>تأیید نهایی</h4>
+                            <p>بررسی و ارسال</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- فرم چند مرحله‌ای -->
+                <form class="order-form" id="orderForm">
+                    
+                    <!-- مرحله ۱: اطلاعات مشتری -->
+                    <div class="form-step active" id="step1">
+                        <div class="form-section">
+                            <h3><i class="bi bi-person-badge"></i> اطلاعات شخصی</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fullName">
+                                        <i class="bi bi-person"></i>
+                                        نام و نام خانوادگی *
+                                    </label>
+                                    <input type="text" id="fullName" required placeholder="محمد احمدی">
+                                </div>
+                                <div class="form-group">
+                                    <label for="company">
+                                        <i class="bi bi-building"></i>
+                                        نام شرکت/کارگاه
+                                    </label>
+                                    <input type="text" id="company" placeholder="صنعت گستر">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">
+                                        <i class="bi bi-phone"></i>
+                                        شماره تماس *
+                                    </label>
+                                    <input type="tel" id="phone" required placeholder="۰۹۱۲XXX XXXX">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">
+                                        <i class="bi bi-envelope"></i>
+                                        آدرس ایمیل
+                                    </label>
+                                    <input type="email" id="email" placeholder="example@domain.com">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="bi bi-geo-alt"></i> اطلاعات تماس</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="address">
+                                        <i class="bi bi-geo"></i>
+                                        آدرس کامل
+                                    </label>
+                                    <textarea id="address" rows="2" placeholder="آدرس دقیق محل کارگاه یا شرکت"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">
+                                        <i class="bi bi-pin-map"></i>
+                                        شهر
+                                    </label>
+                                    <select id="city" required>
+                                        <option value="">انتخاب کنید</option>
+                                        <option value="tehran">تهران</option>
+                                        <option value="karaj">کرج</option>
+                                        <option value="isfahan">اصفهان</option>
+                                        <option value="shiraz">شیراز</option>
+                                        <option value="tabriz">تبریز</option>
+                                        <option value="mashhad">مشهد</option>
+                                        <option value="other">سایر</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postalCode">
+                                        <i class="bi bi-mailbox"></i>
+                                        کد پستی
+                                    </label>
+                                    <input type="text" id="postalCode" placeholder="۱۲۳۴۵۶۷۸۹۰">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-secondary" disabled>قبلی</button>
+                            <button type="button" class="btn btn-primary next-step" data-next="step2">مرحله بعد</button>
+                        </div>
+                    </div>
+
+                    <!-- مرحله ۲: جزئیات سفارش -->
+                    <div class="form-step" id="step2">
+                        <div class="form-section">
+                            <h3><i class="bi bi-tools"></i> خدمات مورد نیاز</h3>
+                            <div class="services-checkbox">
+                                <div class="checkbox-group">
+                                    <h4>انتخاب دسته‌بندی خدمات *</h4>
+                                    <div class="checkbox-grid">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="cnc-turning">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-cpu"></i>
+                                            تراشکاری CNC
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="cnc-milling">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-motherboard"></i>
+                                            فرزکاری CNC
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="grinding">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-diamond"></i>
+                                            سنگ‌زنی دقیق
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="wirecut">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-lightning-charge"></i>
+                                            وایرکات EDM
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="welding">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-fire"></i>
+                                            جوشکاری TIG/MIG
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="plating">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-droplet"></i>
+                                            آبکاری صنعتی
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="mold-making">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-bucket"></i>
+                                            ساخت قالب
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="service" value="repair">
+                                            <span class="checkmark"></span>
+                                            <i class="bi bi-wrench"></i>
+                                            تعمیرات صنعتی
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="bi bi-clipboard-data"></i> مشخصات فنی</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="material">
+                                        <i class="bi bi-box"></i>
+                                        جنس قطعه *
+                                    </label>
+                                    <select id="material" required>
+                                        <option value="">انتخاب کنید</option>
+                                        <option value="steel">فولاد</option>
+                                        <option value="aluminum">آلومینیوم</option>
+                                        <option value="stainless">استنلس استیل</option>
+                                        <option value="copper">مس و آلیاژها</option>
+                                        <option value="brass">برنج</option>
+                                        <option value="plastic">پلاستیک</option>
+                                        <option value="other">سایر</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quantity">
+                                        <i class="bi bi-123"></i>
+                                        تعداد قطعه
+                                    </label>
+                                    <input type="number" id="quantity" min="1" value="1" placeholder="تعداد">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tolerance">
+                                        <i class="bi bi-rulers"></i>
+                                        تلرانس مجاز (میلی‌متر)
+                                    </label>
+                                    <input type="text" id="tolerance" placeholder="±۰.۰۱">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deadline">
+                                        <i class="bi bi-calendar-check"></i>
+                                        مهلت تحویل
+                                    </label>
+                                    <input type="date" id="deadline">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="bi bi-chat-left-text"></i> توضیحات اضافی</h3>
+                            <div class="form-group full-width">
+                                <label for="description">
+                                    <i class="bi bi-pencil"></i>
+                                    توضیحات و الزامات خاص
+                                </label>
+                                <textarea id="description" rows="4" placeholder="توضیحات کامل درباره قطعه، کاربرد، استانداردهای مورد نیاز و ..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-secondary prev-step" data-prev="step1">مرحله قبل</button>
+                            <button type="button" class="btn btn-primary next-step" data-next="step3">مرحله بعد</button>
+                        </div>
+                    </div>
+
+                    <!-- مرحله ۳: بارگذاری فایل -->
+                    <div class="form-step" id="step3">
+                        <div class="form-section">
+                            <h3><i class="bi bi-file-earmark-arrow-up"></i> بارگذاری فایل‌ها</h3>
+                            <div class="upload-area" id="uploadArea">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                <p>فایل‌های خود را اینجا بکشید و رها کنید</p>
+                                <p class="upload-hint">یا برای انتخاب فایل کلیک کنید</p>
+                                <input type="file" id="fileUpload" multiple accept=".pdf,.dwg,.dxf,.stp,.igs,.jpg,.png">
+                                <div class="upload-info">
+                                    <p><i class="bi bi-info-circle"></i> فرمت‌های مجاز: PDF, DWG, DXF, STP, IGS, JPG, PNG</p>
+                                    <p><i class="bi bi-info-circle"></i> حداکثر حجم هر فایل: ۱۰ مگابایت</p>
+                                </div>
+                            </div>
+
+                            <div class="uploaded-files" id="uploadedFiles">
+                                <!-- فایل‌های آپلود شده اینجا نمایش داده می‌شوند -->
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="bi bi-file-text"></i> نوع فایل‌های مورد نیاز</h3>
+                            <div class="file-types">
+                                <div class="file-type-item">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                    <div>
+                                        <h4>نقشه فنی (PDF/DWG/DXF)</h4>
+                                        <p>نقشه‌های دو بعدی با ابعاد دقیق</p>
+                                    </div>
+                                </div>
+                                <div class="file-type-item">
+                                    <i class="bi bi-file-earmark-3d"></i>
+                                    <div>
+                                        <h4>فایل سه بعدی (STP/IGS)</h4>
+                                        <p>مدل سه بعدی قطعه</p>
+                                    </div>
+                                </div>
+                                <div class="file-type-item">
+                                    <i class="bi bi-file-earmark-image"></i>
+                                    <div>
+                                        <h4>تصاویر (JPG/PNG)</h4>
+                                        <p>عکس از نمونه یا قطعه مشابه</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-secondary prev-step" data-prev="step2">مرحله قبل</button>
+                            <button type="button" class="btn btn-primary next-step" data-next="step4">مرحله بعد</button>
+                        </div>
+                    </div>
+
+                    <!-- مرحله ۴: تأیید نهایی -->
+                    <div class="form-step" id="step4">
+                        <div class="form-section">
+                            <h3><i class="bi bi-check-circle"></i> بررسی و تأیید نهایی</h3>
+                            
+                            <div class="review-summary">
+                                <div class="review-section">
+                                    <h4><i class="bi bi-person-check"></i> اطلاعات مشتری</h4>
+                                    <div class="review-details" id="customerReview">
+                                        <!-- اطلاعات مرحله ۱ اینجا نمایش داده می‌شود -->
+                                    </div>
+                                </div>
+
+                                <div class="review-section">
+                                    <h4><i class="bi bi-clipboard-check"></i> جزئیات سفارش</h4>
+                                    <div class="review-details" id="orderReview">
+                                        <!-- اطلاعات مرحله ۲ اینجا نمایش داده می‌شود -->
+                                    </div>
+                                </div>
+
+                                <div class="review-section">
+                                    <h4><i class="bi bi-files"></i> فایل‌های آپلود شده</h4>
+                                    <div class="review-details" id="filesReview">
+                                        <!-- اطلاعات مرحله ۳ اینجا نمایش داده می‌شود -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="terms-agreement">
+                                <label class="checkbox-item full-width">
+                                    <input type="checkbox" id="agreeTerms" required>
+                                    <span class="checkmark"></span>
+                                    <span class="terms-text">
+                                        با <a href="#" class="terms-link">قوانین و شرایط</a> کارگاه موافقم.
+                                        می‌پذیرم که اطلاعات وارد شده صحیح است و پس از تأیید نهایی،
+                                        کارگاه با من تماس خواهد گرفت.
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation final-step">
+                            <button type="button" class="btn btn-secondary prev-step" data-prev="step3">مرحله قبل</button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-lg"></i>
+                                ثبت نهایی سفارش
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- پیام موفقیت (پس از ثبت) -->
+                    <div class="success-message" id="successMessage">
+                        <div class="success-icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <h3>سفارش شما با موفقیت ثبت شد!</h3>
+                        <p>کد پیگیری سفارش: <strong id="orderCode">WS-2024-001</strong></p>
+                        <p>همکاران ما در اسرع وقت با شما تماس خواهند گرفت.</p>
+                        <div class="success-actions">
+                            <button type="button" class="btn btn-primary" id="printOrder">
+                                <i class="bi bi-printer"></i> چاپ رسید
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="newOrder">
+                                <i class="bi bi-plus-circle"></i> ثبت سفارش جدید
+                            </button>
+                            <a href="index.html" class="btn btn-secondary">
+                                <i class="bi bi-house-door"></i> بازگشت به صفحه اصلی
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- اطلاعات تماس اضطراری -->
+                <div class="order-support">
+                    <div class="support-card">
+                        <i class="bi bi-headset"></i>
+                        <div>
+                            <h4>نیاز به کمک دارید؟</h4>
+                            <p>با شماره <strong>۰۲۱-۱۲۳۴۵۶۷۸</strong> تماس بگیرید</p>
+                        </div>
+                    </div>
+                    <div class="support-card">
+                        <i class="bi bi-whatsapp"></i>
+                        <div>
+                            <h4>پشتیبانی واتساپ</h4>
+                            <p>سوالات فنی خود را از طریق واتساپ بپرسید</p>
+                        </div>
+                    </div>
+                    <div class="support-card">
+                        <i class="bi bi-clock"></i>
+                        <div>
+                            <h4>ساعات پاسخگویی</h4>
+                            <p>شنبه تا پنجشنبه: ۸:۰۰ تا ۱۸:۰۰</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- فوتر -->
+        <footer class="footer" id="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>راهنمای ثبت سفارش</h4>
+                    <ul>
+                        <li><i class="bi bi-check-circle"></i> اطلاعات دقیق وارد کنید</li>
+                        <li><i class="bi bi-check-circle"></i> خدمات مورد نیاز را انتخاب کنید</li>
+                        <li><i class="bi bi-check-circle"></i> فایل‌های لازم را آپلود کنید</li>
+                        <li><i class="bi bi-check-circle"></i> تأیید نهایی و ثبت سفارش</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>اطلاعات تماس</h4>
+                    <div class="footer-contact">
+                        <p><i class="bi bi-telephone"></i> پشتیبانی: ۰۲۱-۱۲۳۴۵۶۷۸</p>
+                        <p><i class="bi bi-whatsapp"></i> واتساپ: ۰۹۱۲ XXX XXXX</p>
+                        <p><i class="bi bi-envelope"></i> ایمیل: order@workshop.com</p>
+                        <p><i class="bi bi-clock"></i> پاسخگویی: ۸:۰۰ - ۱۸:۰۰</p>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>لینک‌های مفید</h4>
+                    <ul>
+                        <li><a href="index.html">صفحه اصلی</a></li>
+                        <li><a href="services.html">خدمات ما</a></li>
+                        <li><a href="portfolio.html">نمونه کارها</a></li>
+                        <li><a href="contact.html">تماس با ما</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© ۲۰۲۴ - سیستم ثبت سفارش آنلاین کارگاه صنعتی</p>
+                <p class="footer-sub">کلیه حقوق این سایت محفوظ است</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

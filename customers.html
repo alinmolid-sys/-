@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت مشتریان | پنل مدیریت</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --dark: #2c3e50;
+            --gold: #d4af37;
+            --silver: #c0c0c0;
+            --light: #f5f7fa;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        body {
+            background: var(--light);
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* سایدبار */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--dark) 0%, #1a252f 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .logo h2 {
+            color: var(--gold);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .logo p {
+            color: var(--silver);
+            font-size: 12px;
+        }
+        
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--silver);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu a:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        
+        .menu a.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border-right: 3px solid var(--gold);
+        }
+        
+        .logout-btn {
+            margin-top: auto;
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(231, 76, 60, 0.2);
+        }
+        
+        /* محتوای اصلی */
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--gold);
+            color: var(--dark);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--silver);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--gold);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        /* آمار مشتریان */
+        .customers-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gold-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .stat-info h3 {
+            font-size: 24px;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            font-size: 12px;
+            color: var(--silver-dark);
+        }
+        
+        /* جستجو و فیلتر */
+        .search-filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .search-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--silver);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-btn {
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            min-width: 100px;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-group label {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-group select {
+            padding: 10px 15px;
+            border: 2px solid var(--silver);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        /* جدول مشتریان */
+        .customers-table-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .table-header h2 {
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .table-tools {
+            display: flex;
+            gap: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: var(--silver-light);
+            color: var(--dark);
+            padding: 15px;
+            text-align: right;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+            white-space: nowrap;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        /* کارت مشتری */
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .customer-details h4 {
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+        
+        .customer-details p {
+            color: var(--silver-dark);
+            font-size: 12px;
+        }
+        
+        /* وضعیت مشتری */
+        .customer-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-active { background: rgba(46, 204, 113, 0.1); color: #27ae60; }
+        .status-inactive { background: rgba(158, 158, 158, 0.1); color: #757575; }
+        .status-vip { background: rgba(155, 89, 182, 0.1); color: #8e44ad; }
+        .status-new { background: rgba(52, 152, 219, 0.1); color: #2980b9; }
+        
+        /* تگ نوع مشتری */
+        .customer-type {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .type-company { background: rgba(52, 152, 219, 0.1); color: #2980b9; }
+        .type-workshop { background: rgba(241, 196, 15, 0.1); color: #f39c12; }
+        .type-individual { background: rgba(46, 204, 113, 0.1); color: #27ae60; }
+        
+        /* عملیات */
+        .customer-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .view-btn { background: #e3f2fd; color: #1976d2; }
+        .view-btn:hover { background: #1976d2; color: white; }
+        
+        .edit-btn { background: #fff3e0; color: #f57c00; }
+        .edit-btn:hover { background: #f57c00; color: white; }
+        
+        .message-btn { background: #e8f5e9; color: #388e3c; }
+        .message-btn:hover { background: #388e3c; color: white; }
+        
+        /* صفحه‌بندی */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--silver);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-btn.active {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+        
+        /* مدال مشاهده مشتری */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--silver);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--silver);
+            cursor: pointer;
+        }
+        
+        /* رسپانسیو */
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .search-row {
+                flex-direction: column;
+            }
+            
+            .table-tools {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .customer-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- سایدبار -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h2><i class="bi bi-gear"></i> پنل مدیریت</h2>
+            <p>کارگاه صنعتی</p>
+        </div>
+        
+        <nav class="menu">
+            <a href="dashboard.html">
+                <i class="bi bi-speedometer2"></i> داشبورد
+            </a>
+            <a href="orders.html">
+                <i class="bi bi-cart-check"></i> سفارش‌ها
+            </a>
+            <a href="services.html">
+                <i class="bi bi-tools"></i> خدمات
+            </a>
+            <a href="customers.html" class="active">
+                <i class="bi bi-people"></i> مشتریان
+            </a>
+            <a href="../index.html">
+                <i class="bi bi-arrow-right"></i> بازگشت به سایت
+            </a>
+            <a href="index.html" class="logout-btn">
+                <i class="bi bi-box-arrow-left"></i> خروج
+            </a>
+        </nav>
+    </aside>
+    
+    <!-- محتوای اصلی -->
+    <main class="content">
+        <!-- هدر -->
+        <header class="header">
+            <div>
+                <h1><i class="bi bi-people"></i> مدیریت مشتریان</h1>
+                <p>مدیریت اطلاعات و ارتباط با مشتریان</p>
+            </div>
+            
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="exportBtn">
+                    <i class="bi bi-download"></i> خروجی
+                </button>
+                <button class="btn btn-primary" id="addCustomerBtn">
+                    <i class="bi bi-person-plus"></i> افزودن مشتری
+                </button>
+            </div>
+        </header>
+        
+        <!-- آمار -->
+        <section class="customers-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalCustomers">۰</h3>
+                    <p>کل مشتریان</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-star"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="vipCustomers">۰</h3>
+                    <p>مشتریان VIP</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-cart-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="activeCustomers">۰</h3>
+                    <p>مشتریان فعال</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bi bi-currency-exchange"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalRevenue">۰</h3>
+                    <p>درآمد کل (میلیارد)</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- جستجو و فیلتر -->
+        <section class="search-filters">
+            <div class="search-row">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="جستجوی مشتری، شرکت یا شماره تماس...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="bi bi-search"></i> جستجو
+                    </button>
+                </div>
+                
+                <button class="btn btn-secondary" id="resetFiltersBtn">
+                    <i class="bi bi-arrow-clockwise"></i> بازنشانی
+                </button>
+            </div>
+            
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label><i class="bi bi-funnel"></i> وضعیت</label>
+                    <select id="statusFilter">
+                        <option value="">همه وضعیت‌ها</option>
+                        <option value="active">فعال</option>
+                        <option value="inactive">غیرفعال</option>
+                        <option value="vip">VIP</option>
+                        <option value="new">جدید</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label><i class="bi bi-building"></i> نوع</label>
+                    <select id="typeFilter">
+                        <option value="">همه انواع</option>
+                        <option value="company">شرکت</option>
+                        <option value="workshop">کارگاه</option>
+                        <option value="individual">شخصی</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label><i class="bi bi-calendar"></i> تاریخ عضویت</label>
+                    <select id="dateFilter">
+                        <option value="">همه زمان‌ها</option>
+                        <option value="week">هفته گذشته</option>
+                        <option value="month">ماه گذشته</option>
+                        <option value="quarter">سه ماهه</option>
+                        <option value="year">سال گذشته</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label><i class="bi bi-sort-down"></i> مرتب‌سازی</label>
+                    <select id="sortFilter">
+                        <option value="newest">جدیدترین</option>
+                        <option value="oldest">قدیمی‌ترین</option>
+                        <option value="orders">بیشترین سفارش</option>
+                        <option value="revenue">بیشترین درآمد</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+        
+        <!-- جدول مشتریان -->
+        <section class="customers-table-container">
+            <div class="table-header">
+                <h2><i class="bi bi-list-ul"></i> لیست مشتریان</h2>
+                
+                <div class="table-tools">
+                    <button class="btn btn-secondary btn-sm" id="selectAllBtn">
+                        <i class="bi bi-check-square"></i> انتخاب همه
+                    </button>
+                    <button class="btn btn-warning btn-sm" id="sendBulkBtn">
+                        <i class="bi bi-send"></i> ارسال گروهی
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="customersTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">
+                                <input type="checkbox" id="selectAllCheckbox">
+                            </th>
+                            <th>مشتری</th>
+                            <th>نوع</th>
+                            <th>تماس</th>
+                            <th>تعداد سفارش</th>
+                            <th>مجموع خرید</th>
+                            <th>آخرین سفارش</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersBody">
+                        <!-- مشتریان با JavaScript پر می‌شوند -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- صفحه‌بندی -->
+            <div class="pagination" id="pagination">
+                <!-- با JavaScript پر می‌شود -->
+            </div>
+        </section>
+    </main>
+    
+    <!-- مدال مشاهده مشتری -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="bi bi-person-circle"></i> جزئیات مشتری</h2>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            
+            <div id="customerDetails">
+                <!-- جزئیات مشتری اینجا نمایش داده می‌شود -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // داده‌های نمونه مشتریان
+        let customers = [
+            {
+                id: 1,
+                name: "شرکت صنعت گستر",
+                type: "company",
+                email: "info@sanatgostar.com",
+                phone: "۰۹۱۲۱۲۳۴۵۶۷",
+                address: "تهران، شهرک صنعتی شمس‌آباد",
+                registrationDate: "۱۴۰۲/۰۵/۱۵",
+                status: "vip",
+                totalOrders: 24,
+                totalSpent: 48500000,
+                lastOrder: "۱۴۰۳/۰۲/۱۵",
+                notes: "مشتری دائمی، پرداخت منظم"
+            },
+            {
+                id: 2,
+                name: "کارگاه دقیق ساز",
+                type: "workshop",
+                email: "daghigsaz@yahoo.com",
+                phone: "۰۹۳۵۵۵۵۶۶۷۷",
+                address: "کرج، شهرک صنعتی بهارستان",
+                registrationDate: "۱۴۰۲/۱۱/۲۰",
+                status: "active",
+                totalOrders: 12,
+                totalSpent: 18200000,
+                lastOrder: "۱۴۰۳/۰۲/۱۴",
+                notes: "تخصص در قطعات دقیق"
+            },
+            {
+                id: 3,
+                name: "آقای محمدی",
+                type: "individual",
+                email: "mohammadi@gmail.com",
+                phone: "۰۹۱۸۷۶۵۴۳۲۱",
+                address: "اصفهان، خیابان صنعت",
+                registrationDate: "۱۴۰۳/۰۱/۱۰",
+                status: "new",
+                totalOrders: 3,
+                totalSpent: 2850000,
+                lastOrder: "۱۴۰۳/۰۲/۱۳",
+                notes: "مشتری جدید، نیاز به پیگیری"
+            },
+            {
+                id: 4,
+                name: "شرکت خودروسازی",
+                type: "company",
+                email: "orders@khodro.com",
+                phone: "۰۲۱۸۸۷۷۶۶۵۵",
+                address: "تهران، کیلومتر ۱۵ جاده مخصوص",
+                registrationDate: "۱۴۰۱/۰۳/۰۵",
+                status: "vip",
+                totalOrders: 48,
+                totalSpent: 125000000,
+                lastOrder: "۱۴۰۳/۰۲/۱۲",
+                notes: "پروژه‌های بزرگ، قرارداد سالیانه"
+            },
+            {
+                id: 5,
+                name: "آقای احمدی",
+                type: "individual",
+                email: "ahmadi@outlook.com",
+                phone: "۰۹۳۲۱۱۲۲۳۳۴",
+                address: "شیراز، شهرک صنعتی شیراز",
+                registrationDate: "۱۴۰۲/۰۸/۱۲",
+                status: "active",
+                totalOrders: 8,
+                totalSpent: 6500000,
+                lastOrder: "۱۴۰۳/۰۲/۱۱",
+                notes: "تعمیرات دستگاه‌های CNC"
+            },
+            {
+                id: 6,
+                name: "کارگاه برق صنعتی",
+                type: "workshop",
+                email: "bargh@yahoo.com",
+                phone: "۰۹۱۵۵۴۴۳۳۲۲",
+                address: "تبریز، شهرک صنعتی",
+                registrationDate: "۱۴۰۲/۱۰/۰۳",
+                status: "inactive",
+                totalOrders: 5,
+                totalSpent: 3100000,
+                lastOrder: "۱۴۰۳/۰۱/۲۰",
+                notes: "۶ ماه بدون سفارش"
+            },
+            {
+                id: 7,
+                name: "شرکت پتروشیمی",
+                type: "company",
+                email: "petro@petro.com",
+                phone: "۰۲۱۷۷۸۸۹۹۰۰",
+                address: "بندر امام، منطقه صنعتی",
+                registrationDate: "۱۴۰۰/۱۲/۱۵",
+                status: "vip",
+                totalOrders: 36,
+                totalSpent: 89000000,
+                lastOrder: "۱۴۰۳/۰۲/۰۹",
+                notes: "قطعات مقاوم در برابر خوردگی"
+            },
+            {
+                id: 8,
+                name: "آقای کریمی",
+                type: "individual",
+                email: "karimi@hotmail.com",
+                phone: "۰۹۱۹۸۸۷۷۶۶۵",
+                address: "مشهد، شهرک صنعتی طوس",
+                registrationDate: "۱۴۰۳/۰۲/۰۱",
+                status: "new",
+                totalOrders: 1,
+                totalSpent: 1200000,
+                lastOrder: "۱۴۰۳/۰۲/۰۸",
+                notes: "اولین سفارش، رضایت کامل"
+            },
+            {
+                id: 9,
+                name: "کارگاه تراشکاری دقیق",
+                type: "workshop",
+                email: "tarash@gmail.com",
+                phone: "۰۹۱۲۳۴۵۶۷۸۹",
+                address: "اهواز، شهرک صنعتی",
+                registrationDate: "۱۴۰۲/۰۷/۱۸",
+                status: "active",
+                totalOrders: 15,
+                totalSpent: 21500000,
+                lastOrder: "۱۴۰۳/۰۲/۰۵",
+                notes: "همکاری خوب، تحویل به موقع"
+            },
+            {
+                id: 10,
+                name: "شرکت فولاد سازی",
+                type: "company",
+                email: "foolad@foolad.com",
+                phone: "۰۲۱۵۵۵۵۶۶۶۶",
+                address: "اصفهان، شهرک صنعتی مورچه خورت",
+                registrationDate: "۱۴۰۱/۰۹/۲۲",
+                status: "active",
+                totalOrders: 32,
+                totalSpent: 76500000,
+                lastOrder: "۱۴۰۳/۰۲/۰۳",
+                notes: "قطعات سنگین صنعتی"
+            }
+        ];
+        
+        // نگاشت نوع به فارسی
+        const typeMap = {
+            'company': { text: 'شرکت', class: 'type-company' },
+            'workshop': { text: 'کارگاه', class: 'type-workshop' },
+            'individual': { text: 'شخصی', class: 'type-individual' }
+        };
+        
+        // نگاشت وضعیت به فارسی
+        const statusMap = {
+            'active': { text: 'فعال', class: 'status-active' },
+            'inactive': { text: 'غیرفعال', class: 'status-inactive' },
+            'vip': { text: 'VIP', class: 'status-vip' },
+            'new': { text: 'جدید', class: 'status-new' }
+        };
+        
+        // تنظیمات صفحه‌بندی
+        let currentPage = 1;
+        const customersPerPage = 8;
+        let filteredCustomers = [...customers];
+        let selectedCustomers = new Set();
+        
+        // تابع گرفتن حرف اول نام
+        function getInitials(name) {
+            const words = name.split(' ');
+            if (words.length > 1) {
+                return words[0][0] + words[1][0];
+            }
+            return name.substring(0, 2);
+        }
+        
+        // تابع قالب‌بندی قیمت
+        function formatPrice(price) {
+            if (price >= 1000000000) {
+                return (price / 1000000000).toFixed(1) + ' میلیارد';
+            } else if (price >= 1000000) {
+                return (price / 1000000).toFixed(1) + ' میلیون';
+            }
+            return price.toLocaleString() + ' تومان';
+        }
+        
+        // تابع نمایش مشتریان
+        function displayCustomers() {
+            const tbody = document.getElementById('customersBody');
+            tbody.innerHTML = '';
+            
+            const start = (currentPage - 1) * customersPerPage;
+            const end = start + customersPerPage;
+            const pageCustomers = filteredCustomers.slice(start, end);
+            
+            pageCustomers.forEach(customer => {
+                const row = document.createElement('tr');
+                const type = typeMap[customer.type];
+                const status = statusMap[customer.status];
+                const isSelected = selectedCustomers.has(customer.id);
+                
+                row.innerHTML = `
+                    <td>
+                        <input type="checkbox" class="customer-checkbox" 
+                               data-id="${customer.id}" 
+                               ${isSelected ? 'checked' : ''}>
+                    </td>
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">
+                                ${getInitials(customer.name)}
+                            </div>
+                            <div class="customer-details">
+                                <h4>${customer.name}</h4>
+                                <p>${customer.email}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="customer-type ${type.class}">${type.text}</span>
+                    </td>
+                    <td>${customer.phone}</td>
+                    <td><strong>${customer.totalOrders}</strong> سفارش</td>
+                    <td><strong>${formatPrice(customer.totalSpent)}</strong></td>
+                    <td>${customer.lastOrder}</td>
+                    <td>
+                        <span class="customer-status ${status.class}">${status.text}</span>
+                    </td>
+                    <td>
+                        <div class="customer-actions">
+                            <button class="action-btn view-btn" onclick="viewCustomer(${customer.id})">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" onclick="editCustomer(${customer.id})">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="action-btn message-btn" onclick="messageCustomer(${customer.id})">
+                                <i class="bi bi-chat"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            updateStats();
+            updatePagination();
+            setupCheckboxes();
+        }
+        
+        // تابع بروزرسانی آمار
+        function updateStats() {
+            const totalCustomers = filteredCustomers.length;
+            const vipCustomers = filteredCustomers.filter(c => c.status === 'vip').length;
+            const activeCustomers = filteredCustomers.filter(c => c.status === 'active' || c.status === 'vip').length;
+            const totalRevenue = filteredCustomers.reduce((sum, customer) => sum + customer.totalSpent, 0) / 1000000000;
+            
+            document.getElementById('totalCustomers').textContent = totalCustomers;
+            document.getElementById('vipCustomers').textContent = vipCustomers;
+            document.getElementById('activeCustomers').textContent = activeCustomers;
+            document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2);
+        }
+        
+        // تابع صفحه‌بندی
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredCustomers.length / customersPerPage);
+            
+            pagination.innerHTML = '';
+            
+            // دکمه قبلی
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayCustomers();
+                }
+            };
+            pagination.appendChild(prevBtn);
+            
+            // صفحات
+            const maxPages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPages / 2));
+            let endPage = Math.min(totalPages, startPage + maxPages - 1);
+            
+            if (endPage - startPage + 1 < maxPages) {
+                startPage = Math.max(1, endPage - maxPages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => {
+                    currentPage = i;
+                    displayCustomers();
+                };
+                pagination.appendChild(pageBtn);
+            }
+            
+            // دکمه بعدی
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayCustomers();
+                }
+            };
+            pagination.appendChild(nextBtn);
+        }
+        
+        // تابع فیلتر کردن
+        function applyFilters() {
+            const status = document.getElementById('statusFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            const date = document.getElementById('dateFilter').value;
+            const sort = document.getElementById('sortFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredCustomers = customers.filter(customer => {
+                // فیلتر وضعیت
+                if (status && customer.status !== status) return false;
+                
+                // فیلتر نوع
+                if (type && customer.type !== type) return false;
+                
+                // فیلتر تاریخ (ساده شده)
+                if (date) {
+                    // در نسخه واقعی باید تاریخ‌ها را پارس کنید
+                }
+                
+                // فیلتر جستجو
+                if (search) {
+                    const searchText = `${customer.name} ${customer.email} ${customer.phone}`.toLowerCase();
+                    if (!searchText.includes(search)) return false;
+                }
+                
+                return true;
+            });
+            
+            // مرتب‌سازی
+            filteredCustomers.sort((a, b) => {
+                switch(sort) {
+                    case 'newest':
+                        return new Date(b.registrationDate) - new Date(a.registrationDate);
+                    case 'oldest':
+                        return new Date(a.registrationDate) - new Date(b.registrationDate);
+                    case 'orders':
+                        return b.totalOrders - a.totalOrders;
+                    case 'revenue':
+                        return b.totalSpent - a.totalSpent;
+                    default:
+                        return 0;
+                }
+            });
+            
+            currentPage = 1;
+            displayCustomers();
+        }
+        
+        // تابع تنظیم چک‌باکس‌ها
+        function setupCheckboxes() {
+            const checkboxes = document.querySelectorAll('.customer-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const customerId = parseInt(this.dataset.id);
+                    
+                    if (this.checked) {
+                        selectedCustomers.add(customerId);
+                    } else {
+                        selectedCustomers.delete(customerId);
+                    }
+                    
+                    // به‌روزرسانی چک‌باکس انتخاب همه
+                    selectAllCheckbox.checked = selectedCustomers.size === checkboxes.length;
+                    selectAllCheckbox.indeterminate = selectedCustomers.size > 0 && selectedCustomers.size < checkboxes.length;
+                });
+            });
+            
+            // چک‌باکس انتخاب همه
+            selectAllCheckbox.addEventListener('change', function() {
+                const checkboxes = document.querySelectorAll('.customer-checkbox');
+                
+                checkboxes.forEach(checkbox => {
+                    const customerId = parseInt(checkbox.dataset.id);
+                    
+                    if (this.checked) {
+                        selectedCustomers.add(customerId);
+                        checkbox.checked = true;
+                    } else {
+                        selectedCustomers.delete(customerId);
+                        checkbox.checked = false;
+                    }
+                });
+            });
+        }
+        
+        // مشاهده جزئیات مشتری
+        function viewCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+            
+            const type = typeMap[customer.type];
+            const status = statusMap[customer.status];
+            
+            document.getElementById('customerDetails').innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 30px;">
+                    <div style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: bold; color: var(--dark); margin: 0 auto 20px;">
+                            ${getInitials(customer.name)}
+                        </div>
+                        <h3 style="color: var(--dark); margin-bottom: 10px;">${customer.name}</h3>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <span class="customer-type ${type.class}">${type.text}</span>
+                            <span class="customer-status ${status.class}">${status.text}</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: var(--dark); margin-bottom: 15px; border-bottom: 2px solid var(--gold); padding-bottom: 10px;">اطلاعات تماس</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <strong>ایمیل:</strong><br>
+                                ${customer.email}
+                            </div>
+                            <div>
+                                <strong>تلفن:</strong><br>
+                                ${customer.phone}
+                            </div>
+                            <div>
+                                <strong>آدرس:</strong><br>
+                                ${customer.address}
+                            </div>
+                            <div>
+                                <strong>تاریخ عضویت:</strong><br>
+                                ${customer.registrationDate}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--dark); margin-bottom: 15px; border-bottom: 2px solid var(--gold); padding-bottom: 10px;">آمار خرید</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; font-weight: bold; color: var(--dark);">${customer.totalOrders}</div>
+                            <div style="font-size: 12px; color: var(--silver-dark);">تعداد سفارش</div>
+                        </div>
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; font-weight: bold; color: var(--dark);">${formatPrice(customer.totalSpent)}</div>
+                            <div style="font-size: 12px; color: var(--silver-dark);">مجموع خرید</div>
+                        </div>
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; font-weight: bold; color: var(--dark);">${formatPrice(Math.round(customer.totalSpent / customer.totalOrders))}</div>
+                            <div style="font-size: 12px; color: var(--silver-dark);">میانگین سفارش</div>
+                        </div>
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; font-weight: bold; color: var(--dark);">${customer.lastOrder}</div>
+                            <div style="font-size: 12px; color: var(--silver-dark);">آخرین سفارش</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--dark); margin-bottom: 15px; border-bottom: 2px solid var(--gold); padding-bottom: 10px;">یادداشت‌ها</h3>
+                    <p style="background: #f9f9f9; padding: 15px; border-radius: 8px;">${customer.notes}</p>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn btn-primary" onclick="editCustomer(${customer.id})">
+                        <i class="bi bi-pencil"></i> ویرایش اطلاعات
+                    </button>
+                    <button class="btn btn-success" onclick="messageCustomer(${customer.id})">
+                        <i class="bi bi-chat"></i> ارسال پیام
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="bi bi-printer"></i> چاپ اطلاعات
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('customerModal').style.display = 'flex';
+        }
+        
+        // ویرایش مشتری
+        function editCustomer(customerId) {
+            alert(`ویرایش مشتری ${customerId}\nدر نسخه کامل به صفحه ویرایش منتقل می‌شوید.`);
+        }
+        
+        // ارسال پیام به مشتری
+        function messageCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (customer) {
+                const message = prompt(`ارسال پیام به ${customer.name} (${customer.phone}):`, 'سلام، پیام خود را وارد کنید...');
+                if (message) {
+                    alert(`پیام شما به ${customer.name} ارسال شد:\n"${message}"`);
+                }
+            }
+        }
+        
+        // انتخاب همه مشتریان
+        function selectAllCustomers() {
+            const checkboxes = document.querySelectorAll('.customer-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            
+            const allSelected = selectedCustomers.size === checkboxes.length;
+            
+            checkboxes.forEach(checkbox => {
+                const customerId = parseInt(checkbox.dataset.id);
+                
+                if (allSelected) {
+                    selectedCustomers.delete(customerId);
+                    checkbox.checked = false;
+                } else {
+                    selectedCustomers.add(customerId);
+                    checkbox.checked = true;
+                }
+            });
+            
+            selectAllCheckbox.checked = !allSelected;
+            selectAllCheckbox.indeterminate = false;
+        }
+        
+        // ارسال گروهی
+        function sendBulkMessage() {
+            if (selectedCustomers.size === 0) {
+                alert('لطفاً حداقل یک مشتری را انتخاب کنید.');
+                return;
+            }
+            
+            const message = prompt(`ارسال پیام به ${selectedCustomers.size} مشتری:\nپیام خود را وارد کنید:`, 'پیام گروهی...');
+            
+            if (message) {
+                alert(`پیام گروهی به ${selectedCustomers.size} مشتری ارسال شد:\n"${message}"`);
+            }
+        }
+        
+        // خروجی اطلاعات
+        function exportData() {
+            const data = filteredCustomers.map(customer => ({
+                نام: customer.name,
+                نوع: typeMap[customer.type].text,
+                ایمیل: customer.email,
+                تلفن: customer.phone,
+                'تعداد سفارش': customer.totalOrders,
+                'مجموع خرید': formatPrice(customer.totalSpent),
+                'آخرین سفارش': customer.lastOrder,
+                وضعیت: statusMap[customer.status].text
+            }));
+            
+            const csv = convertToCSV(data);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `customers-${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+            
+            alert('فایل CSV مشتریان دانلود شد.');
+        }
+        
+        // تبدیل به CSV
+        function convertToCSV(objArray) {
+            const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+            let str = '\uFEFF'; // BOM برای فارسی
+            
+            // هدر
+            const header = Object.keys(array[0]);
+            str += header.join(',') + '\r\n';
+            
+            // داده‌ها
+            array.forEach(obj => {
+                let line = '';
+                header.forEach(key => {
+                    if (line !== '') line += ',';
+                    line += `"${obj[key]}"`;
+                });
+                str += line + '\r\n';
+            });
+            
+            return str;
+        }
+        
+        // رویدادها
+        document.addEventListener('DOMContentLoaded', function() {
+            displayCustomers();
+            
+            // فیلترها
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('typeFilter').addEventListener('change', applyFilters);
+            document.getElementById('dateFilter').addEventListener('change', applyFilters);
+            document.getElementById('sortFilter').addEventListener('change', applyFilters);
+            
+            // جستجو
+            document.getElementById('searchBtn').addEventListener('click', applyFilters);
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') applyFilters();
+            });
+            
+            // بازنشانی فیلترها
+            document.getElementById('resetFiltersBtn').addEventListener('click', function() {
+                document.getElementById('statusFilter').value = '';
+                document.getElementById('typeFilter').value = '';
+                document.getElementById('dateFilter').value = '';
+                document.getElementById('sortFilter').value = 'newest';
+                document.getElementById('searchInput').value = '';
+                
+                filteredCustomers = [...customers];
+                currentPage = 1;
+                displayCustomers();
+            });
+            
+            // انتخاب همه
+            document.getElementById('selectAllBtn').addEventListener('click', selectAllCustomers);
+            
+            // ارسال گروهی
+            document.getElementById('sendBulkBtn').addEventListener('click', sendBulkMessage);
+            
+            // افزودن مشتری
+            document.getElementById('addCustomerBtn').addEventListener('click', function() {
+                alert('در نسخه کامل به صفحه افزودن مشتری منتقل می‌شوید.');
+            });
+            
+            // خروجی
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+            
+            // مدال
+            document.getElementById('modalClose').addEventListener('click', function() {
+                document.getElementById('customerModal').style.display = 'none';
+            });
+            
+            // بستن مدال با کلیک بیرون
+            document.getElementById('customerModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
